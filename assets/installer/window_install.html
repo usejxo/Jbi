@@ -95,12 +95,12 @@
 
             // Function to show the install button
             function showInstallButton() {
-                const installButton = document.createElement('button');
+                const installButton = document.createElement('button'); // Create button dynamically
                 installButton.innerText = 'Install PWA';
-                document.body.appendChild(installButton);
+                installButton.style.display = 'block'; // Make the button visible
+                document.body.appendChild(installButton); // Append button to body
 
                 installButton.classList.add('active'); // Make it clickable
-                installButton.style.display = 'block'; // Show the button
 
                 installButton.addEventListener('click', () => {
                     if (deferredPrompt) {
