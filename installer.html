@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jbox Installer</title>
+    <script>
+        function openInstaller() {
+            const width = 400;
+            const height = 300;
+            const left = (screen.width - width) / 2;
+            const top = (screen.height - height) / 2;
+
+            window.open(
+                '/assets/installer/window_install.html', 
+                'InstallerWindow', 
+                `width=${width},height=${height},top=${top},left=${left}`
+            );
+        }
+    </script>
+</head>
+<body onload="openInstaller()">
+</body>
+</html>
