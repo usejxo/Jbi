@@ -1,7 +1,7 @@
 {
     "name": "Jblox",
     "short_name": "Jblox",
-    "start_url": "/gamefiles/index.html",
+    "start_url": "/assets/gamefiles/index.html",
     "display": "standalone",
     "background_color": "#ffffff",
     "theme_color": "#000000",
