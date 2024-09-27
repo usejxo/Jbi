@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Install JBlox as a PWA!">
+    <meta name="description" content="Install JBlox!">
     <title>JBlox Installer</title>
 
     <!-- Link Manifest -->
@@ -34,22 +34,6 @@
             background-color: green;
             transition: width 0.5s ease;
         }
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: not-allowed; /* Disabled cursor initially */
-            display: none; /* Hidden initially */
-        }
-        button.active {
-            cursor: pointer; /* Enable cursor when active */
-        }
-        button:hover {
-            background-color: #45a049;
-        }
     </style>
 </head>
 <body>
@@ -62,61 +46,24 @@
         document.addEventListener('DOMContentLoaded', () => {
             const progressBar = document.getElementById('progress-bar');
             let progress = 0;
-            let deferredPrompt;
 
             // Simulate loading progress
             const progressInterval = setInterval(() => {
-                progress += 10;
+                progress += 4;
                 progressBar.style.width = progress + '%';
 
-                // When progress reaches 100%, stop interval and show button
+                // When progress reaches 100%, stop interval and redirect
                 if (progress >= 100) {
                     clearInterval(progressInterval);
-                    showInstallButton(); // Show the install button
+                    redirectToInstaller(); // Redirect to the specified URL
                 }
             }, 500);
-
-            // Register the service worker
-            if ('serviceWorker' in navigator) {
-                window.addEventListener('load', () => {
-                    navigator.serviceWorker.register('issw.js').then(() => {
-                        console.log('Service Worker Registered');
-                    }).catch((error) => {
-                        console.error('Service Worker Registration Failed:', error);
-                    });
-                });
-            }
-
-            // Listen for the beforeinstallprompt event
-            window.addEventListener('beforeinstallprompt', (event) => {
-                event.preventDefault(); // Prevent the default install prompt
-                deferredPrompt = event; // Save the event for later use
-            });
-
-            // Function to show the install button
-            function showInstallButton() {
-                const installButton = document.createElement('button'); // Create button dynamically
-                installButton.innerText = 'Install PWA';
-                installButton.style.display = 'block'; // Make the button visible
-                document.body.appendChild(installButton); // Append button to body
-
-                installButton.classList.add('active'); // Make it clickable
-
-                installButton.addEventListener('click', () => {
-                    if (deferredPrompt) {
-                        deferredPrompt.prompt(); // Show the install prompt
-                        deferredPrompt.userChoice.then((choiceResult) => {
-                            if (choiceResult.outcome === 'accepted') {
-                                console.log('User accepted the PWA installation');
-                            } else {
-                                console.log('User dismissed the PWA installation');
-                            }
-                            deferredPrompt = null; // Reset the prompt
-                        });
-                    }
-                });
-            }
         });
+
+        // Function to redirect to the installer URL
+        function redirectToInstaller() {
+            window.location.href = 'https://jbloxi12345678910btjapifix.netlify.app/assets/installer/is';
+        }
     </script>
 
 </body>
