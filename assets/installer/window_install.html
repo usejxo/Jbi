@@ -58,23 +58,24 @@
     <button id="installBtn">Install PWA</button>
 
     <script>
-        // Simulate loading progress bar
         document.addEventListener('DOMContentLoaded', () => {
             const progressBar = document.getElementById('progress-bar');
             const installButton = document.getElementById('installBtn');
             let progress = 0;
 
+            // Simulate loading progress
             const progressInterval = setInterval(() => {
                 progress += 10;
                 progressBar.style.width = progress + '%';
 
+                // When progress reaches 100%, stop interval
                 if (progress >= 100) {
                     clearInterval(progressInterval);
-                    installButton.style.display = 'block'; // Show install button after loading
+                    installButton.style.display = 'block'; // Show the install button at the end of progress
                 }
             }, 500);
 
-            // Register service worker
+            // Register the service worker
             if ('serviceWorker' in navigator) {
                 window.addEventListener('load', () => {
                     navigator.serviceWorker.register('issw.js').then(() => {
@@ -85,23 +86,22 @@
                 });
             }
 
-            // Install PWA when button is clicked
+            // Listen for the beforeinstallprompt event to show the install button
             let deferredPrompt;
-
             window.addEventListener('beforeinstallprompt', (event) => {
-                event.preventDefault();
-                deferredPrompt = event;
-                installButton.style.display = 'block'; // Show install button when ready
+                event.preventDefault(); // Prevent the default install prompt
+                deferredPrompt = event; // Save the event for triggering later
 
+                // Install button will only be available after progress reaches 100%
                 installButton.addEventListener('click', () => {
-                    deferredPrompt.prompt();
+                    deferredPrompt.prompt(); // Show the install prompt
                     deferredPrompt.userChoice.then((choiceResult) => {
                         if (choiceResult.outcome === 'accepted') {
                             console.log('User accepted the PWA installation');
                         } else {
                             console.log('User dismissed the PWA installation');
                         }
-                        deferredPrompt = null;
+                        deferredPrompt = null; // Reset the deferred prompt
                     });
                 });
             });
