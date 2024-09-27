@@ -3,16 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jbox Installer</title>
+    <title>Jblox Installer</title>
     <script>
         function openInstaller() {
+            // Get the base URL dynamically
+            const baseURL = window.location.origin + window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
+
             const width = 400;
             const height = 300;
             const left = (screen.width - width) / 2;
             const top = (screen.height - height) / 2;
 
             window.open(
-                '/assets/installer/window_install.html', 
+                `${baseURL}/assets/installer/window_install.html`, 
                 'InstallerWindow', 
                 `width=${width},height=${height},top=${top},left=${left}`
             );
