@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Install JBlox as a PWA!">
     <title>JBlox Installer</title>
 
     <!-- Link Manifest -->
@@ -85,8 +86,24 @@
             }
 
             // Install PWA when button is clicked
-            installButton.addEventListener('click', () => {
-                alert('PWA installed successfully!');
+            let deferredPrompt;
+
+            window.addEventListener('beforeinstallprompt', (event) => {
+                event.preventDefault();
+                deferredPrompt = event;
+                installButton.style.display = 'block'; // Show install button when ready
+
+                installButton.addEventListener('click', () => {
+                    deferredPrompt.prompt();
+                    deferredPrompt.userChoice.then((choiceResult) => {
+                        if (choiceResult.outcome === 'accepted') {
+                            console.log('User accepted the PWA installation');
+                        } else {
+                            console.log('User dismissed the PWA installation');
+                        }
+                        deferredPrompt = null;
+                    });
+                });
             });
         });
     </script>
