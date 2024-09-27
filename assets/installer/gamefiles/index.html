@@ -79,20 +79,6 @@
             text-align: center;
             color: #fff;
         }
-        .user-section {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        .user-section .username {
-            font-size: 20px;
-            font-weight: bold;
-        }
-        .user-section .jbux {
-            font-size: 16px;
-            color: #00ff00;
-        }
         /* Button styles with gradient */
         button {
             background: linear-gradient(to right, #00e4ff, #007cff, #ff00ff);
@@ -114,15 +100,16 @@
 
     <h1>JBlox - Your Gaming Hub</h1>
 
+    <!-- Authentication Section -->
+    <div id="auth">
+        <button id="login-button">Log In</button>
+        <button id="logout-button" style="display:none;">Log Out</button>
+        <p id="welcome-message" style="display:none;"></p>
+    </div>
+
     <!-- Search Bar -->
     <div class="search-bar">
         <input type="text" id="search-input" onkeyup="searchGames()" placeholder="Search for games...">
-    </div>
-
-    <!-- Recently Played Section -->
-    <h2 class="section-title">Recently Played</h2>
-    <div class="game-container" id="recently-played">
-        <!-- Recently played games will be inserted here by JavaScript -->
     </div>
 
     <!-- Recommended Section -->
@@ -142,7 +129,34 @@
         <p>&copy; 2024 JBlox - All rights reserved.</p>
     </div>
 
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
     <script>
+        // Initialize Netlify Identity
+        netlifyIdentity.init();
+
+        // Authentication Functions
+        document.getElementById('login-button').onclick = function() {
+            netlifyIdentity.open();
+        };
+
+        document.getElementById('logout-button').onclick = function() {
+            netlifyIdentity.logout();
+        };
+
+        netlifyIdentity.on('login', user => {
+            document.getElementById('welcome-message').innerText = `Welcome, ${user.user_metadata.full_name}!`;
+            document.getElementById('welcome-message').style.display = 'block';
+            document.getElementById('login-button').style.display = 'none';
+            document.getElementById('logout-button').style.display = 'block';
+            netlifyIdentity.close();
+        });
+
+        netlifyIdentity.on('logout', () => {
+            document.getElementById('welcome-message').style.display = 'none';
+            document.getElementById('login-button').style.display = 'block';
+            document.getElementById('logout-button').style.display = 'none';
+        });
+
         // Game data
         const games = [
             { title: 'Shooter', img: 'https://jbloxi12345678910btjapifix.netlify.app/assets/installer/gamefiles/images/g1.png', link: 'https://jbg1.netlify.app/' },
@@ -155,15 +169,6 @@
             { title: 'Game 8', img: 'https://jbloxi12345678910btjapifix.netlify.app/assets/installer/gamefiles/images/nd.png', link: 'https://jbloxi12345678910btjapifix.netlify.app/assets/installer/gamefiles/gna' }
         ];
 
-        // Utility function to save recently played games in localStorage
-        function saveRecentlyPlayed(game) {
-            let recentlyPlayed = JSON.parse(localStorage.getItem('recentlyPlayed')) || [];
-            recentlyPlayed = recentlyPlayed.filter(g => g.title !== game.title);
-            recentlyPlayed.unshift(game);
-            recentlyPlayed = recentlyPlayed.slice(0, 5);
-            localStorage.setItem('recentlyPlayed', JSON.stringify(recentlyPlayed));
-        }
-
         // Function to display games in a container
         function displayGames(containerId, gameList) {
             const container = document.getElementById(containerId);
@@ -171,18 +176,12 @@
 
             gameList.forEach(game => {
                 const gameCard = `
-                    <a href="${game.link}" class="game-card" onclick="saveRecentlyPlayed(${JSON.stringify(game)})">
+                    <a href="${game.link}" class="game-card">
                         <img src="${game.img}" alt="${game.title}">
                         <div class="game-title">${game.title}</div>
                     </a>`;
                 container.innerHTML += gameCard;
             });
-        }
-
-        // Display recently played games from localStorage
-        function displayRecentlyPlayed() {
-            const recentlyPlayed = JSON.parse(localStorage.getItem('recentlyPlayed')) || [];
-            displayGames('recently-played', recentlyPlayed);
         }
 
         // Display 4 random recommended games
@@ -213,11 +212,6 @@
             }
         }
 
-        // Initial display of user info (this function should exist based on your logic)
-        displayUserInfo();
-
-        // Display recently played games on page load
-        displayRecentlyPlayed();
     </script>
 
 </body>
