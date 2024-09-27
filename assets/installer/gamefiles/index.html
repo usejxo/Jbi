@@ -7,11 +7,10 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #1c1c1c;
+            background: linear-gradient(to bottom right, #00e4ff, #007cff, #ff00ff);
             color: #fff;
             margin: 0;
             padding: 20px;
-            display: none; /* Hide content until password is entered */
         }
         h1, h2 {
             color: #fff;
@@ -28,6 +27,13 @@
             border-radius: 20px;
             border: none;
             font-size: 16px;
+            background-color: #007cff;
+            color: #fff;
+            outline: none;
+            transition: background-color 0.3s ease;
+        }
+        .search-bar input:focus {
+            background-color: #00e4ff;
         }
         .section-title {
             font-size: 18px;
@@ -40,7 +46,7 @@
             padding: 10px;
         }
         .game-card {
-            background-color: #333;
+            background: linear-gradient(145deg, #007cff, #ff00ff);
             border-radius: 10px;
             padding: 10px;
             text-decoration: none;
@@ -61,6 +67,7 @@
             font-weight: bold;
             margin-top: 10px;
             font-size: 16px;
+            color: #fff;
         }
         .footer {
             background-color: #333;
@@ -70,6 +77,7 @@
             left: 0;
             width: 100%;
             text-align: center;
+            color: #fff;
         }
         .user-section {
             display: flex;
@@ -84,6 +92,21 @@
         .user-section .jbux {
             font-size: 16px;
             color: #00ff00;
+        }
+        /* Button styles with gradient */
+        button {
+            background: linear-gradient(to right, #00e4ff, #007cff, #ff00ff);
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.2s;
+        }
+        button:hover {
+            background: linear-gradient(to right, #007cff, #00e4ff);
+            transform: scale(1.05);
         }
     </style>
 </head>
@@ -120,15 +143,6 @@
     </div>
 
     <script>
-        // Simple password protection
-        var password = prompt("Please enter the beta access password:");
-        if (password !== "jxobloxbeta1!") {
-            alert("Incorrect password. Access denied.");
-            window.location.href = "about:blank"; // Redirect to blank page if incorrect
-        } else {
-            document.body.style.display = "block"; // Show content if correct
-        }
-
         // Game data
         const games = [
             { title: 'Shooter', img: 'https://jblox.netlify.app/images/g1.png', link: 'https://jbg1.netlify.app/' },
@@ -144,13 +158,9 @@
         // Utility function to save recently played games in localStorage
         function saveRecentlyPlayed(game) {
             let recentlyPlayed = JSON.parse(localStorage.getItem('recentlyPlayed')) || [];
-            // Remove the game if it's already in the list to avoid duplicates
             recentlyPlayed = recentlyPlayed.filter(g => g.title !== game.title);
-            // Add the new game to the front of the array
             recentlyPlayed.unshift(game);
-            // Keep only the latest 5 games
             recentlyPlayed = recentlyPlayed.slice(0, 5);
-            // Save back to localStorage
             localStorage.setItem('recentlyPlayed', JSON.stringify(recentlyPlayed));
         }
 
