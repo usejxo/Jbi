@@ -35,14 +35,17 @@
             transition: width 0.5s ease;
         }
         button {
-            display: none;
             padding: 10px 20px;
             font-size: 16px;
             background-color: #4CAF50;
             color: white;
             border: none;
             border-radius: 5px;
-            cursor: pointer;
+            cursor: not-allowed; /* Disabled cursor initially */
+            display: none; /* Hidden initially */
+        }
+        button.active {
+            cursor: pointer; /* Enable cursor when active */
         }
         button:hover {
             background-color: #45a049;
@@ -55,23 +58,21 @@
         <div class="progress-bar" id="progress-bar"></div>
     </div>
 
-    <button id="installBtn">Install PWA</button>
-
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const progressBar = document.getElementById('progress-bar');
-            const installButton = document.getElementById('installBtn');
             let progress = 0;
+            let deferredPrompt;
 
             // Simulate loading progress
             const progressInterval = setInterval(() => {
                 progress += 10;
                 progressBar.style.width = progress + '%';
 
-                // When progress reaches 100%, stop interval
+                // When progress reaches 100%, stop interval and show button
                 if (progress >= 100) {
                     clearInterval(progressInterval);
-                    installButton.style.display = 'block'; // Show the install button at the end of progress
+                    showInstallButton(); // Show the install button
                 }
             }, 500);
 
@@ -86,25 +87,35 @@
                 });
             }
 
-            // Listen for the beforeinstallprompt event to show the install button
-            let deferredPrompt;
+            // Listen for the beforeinstallprompt event
             window.addEventListener('beforeinstallprompt', (event) => {
                 event.preventDefault(); // Prevent the default install prompt
-                deferredPrompt = event; // Save the event for triggering later
-
-                // Install button will only be available after progress reaches 100%
-                installButton.addEventListener('click', () => {
-                    deferredPrompt.prompt(); // Show the install prompt
-                    deferredPrompt.userChoice.then((choiceResult) => {
-                        if (choiceResult.outcome === 'accepted') {
-                            console.log('User accepted the PWA installation');
-                        } else {
-                            console.log('User dismissed the PWA installation');
-                        }
-                        deferredPrompt = null; // Reset the deferred prompt
-                    });
-                });
+                deferredPrompt = event; // Save the event for later use
             });
+
+            // Function to show the install button
+            function showInstallButton() {
+                const installButton = document.createElement('button');
+                installButton.innerText = 'Install PWA';
+                document.body.appendChild(installButton);
+
+                installButton.classList.add('active'); // Make it clickable
+                installButton.style.display = 'block'; // Show the button
+
+                installButton.addEventListener('click', () => {
+                    if (deferredPrompt) {
+                        deferredPrompt.prompt(); // Show the install prompt
+                        deferredPrompt.userChoice.then((choiceResult) => {
+                            if (choiceResult.outcome === 'accepted') {
+                                console.log('User accepted the PWA installation');
+                            } else {
+                                console.log('User dismissed the PWA installation');
+                            }
+                            deferredPrompt = null; // Reset the prompt
+                        });
+                    }
+                });
+            }
         });
     </script>
 
